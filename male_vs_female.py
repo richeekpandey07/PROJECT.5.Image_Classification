@@ -66,14 +66,14 @@ if uploaded_file is not None:
     
 st.write("Prediction:", prediction)
 st.write("Probabilities:", probability)
-    # Display prediction
-    if prediction == 0:
-        st.success(" Prediction: Male")
-    else:
-        st.success(" Prediction: Female")
+# Display prediction
+if prediction == 0:
+    st.success(" Prediction: Male")
+else:
+    st.success(" Prediction: Female")
+    
+# Display probabilities
+st.subheader("Prediction Confidence")
 
-    # Display probabilities
-    st.subheader("Prediction Confidence")
-
-    st.write(f" Male Probability: **{probability[0] * 100:.2f}%**")
-    st.write(f" Female Probability: **{probability[1] * 100:.2f}%**")
+st.write(f" Male Probability: **{probability[0] * 100:.2f}%**")
+st.write(f" Female Probability: **{probability[1] * 100:.2f}%**")
