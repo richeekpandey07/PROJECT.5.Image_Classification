@@ -63,7 +63,9 @@ if uploaded_file is not None:
     prediction = model.predict([resized])[0]
 
     probability = model.predict_proba([resized])[0]
-
+    
+st.write("Prediction:", prediction)
+st.write("Probabilities:", probability)
     # Display prediction
     if prediction == 0:
         st.success(" Prediction: Male")
