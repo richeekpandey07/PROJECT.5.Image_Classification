@@ -65,7 +65,29 @@ if uploaded_file is not None:
     probability = model.predict_proba([resized])[0]
     
 st.write("Prediction:", prediction)
-st.write("Probabilities:", probability)
+st.write("Probabilities:", probability)if uploaded_file is not None:
+
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Uploaded Image", use_container_width=True)
+
+    img = image.resize((128, 128))
+    img = np.array(img)
+
+    if len(img.shape) == 2:
+        img = np.stack((img,) * 3, axis=-1)
+
+    img = img / 255.0
+    img = np.expand_dims(img, axis=0)
+
+    prediction = model.predict(img)
+    prediction = np.argmax(prediction)
+
+    if prediction == 0:
+        st.success("👨 Male")
+    else:
+        st.success("👩 Female")
+
+    st.write("Prediction:", prediction)
 # Display prediction
 if prediction == 0:
     st.success(" Prediction: Male")
