@@ -64,7 +64,7 @@ if uploaded_file is not None:
 
     probability = model.predict_proba([resized])[0]
     
-st.write("Prediction:", prediction)
+# st.write("Prediction:", prediction)
 st.write("Probabilities:", probability)
 
 if uploaded_file is not None:
