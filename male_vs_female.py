@@ -101,7 +101,7 @@
 
 # st.write(f" Male Probability: **{probability[0] * 100:.2f}%**")
 # st.write(f" Female Probability: **{probability[1] * 100:.2f}%**")
-```python
+
 import streamlit as st
 import numpy as np
 import pickle
