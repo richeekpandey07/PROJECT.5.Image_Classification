@@ -114,7 +114,26 @@ if uploaded_file is not None:
 # ----------------------------------
 # Footer
 # ----------------------------------
-st.markdown("---")
+
+st.markdown(
+    """
+    <div style='text-align:center'>
+        <h3>🚀 About the Developer</h3>
+        <p><b>Richeek Pandey</b></p>
+        <p>
+            <a href="https://www.linkedin.com/in/richeek-pandey-9954783a9">
+                LinkedIn Profile
+            </a>
+            |
+            <a href="https://github.com/richeekpandey07" >
+                GitHub Profile
+            </a>
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 
 st.markdown("""
 ### 🚀 About Project
