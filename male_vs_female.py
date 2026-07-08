@@ -188,44 +188,46 @@ if uploaded_file is not None:
             male_prob = probability[0] * 100
             female_prob = probability[1] * 100
 
-            confidence = max(male_prob, female_prob)
+is invalid Python and breaks the `try/except` structure.
 
-            st.metric(
-                label="Confidence Score",
-                value=f"{confidence:.2f}%"
-            )
+Also, your `except` is probably at the wrong indentation level.
 
-            st.markdown("### 📊 Probability Analysis")
+It should look like this:
 
-            st.write(
-                f"👨 Male Probability: **{male_prob:.2f}%**"
-            )
-            st.progress(float(probability[0]))
+```python
+if uploaded_file is not None:
 
-            st.write(
-                f"👩 Female Probability: **{female_prob:.2f}%**"
-            )
-            st.progress(float(probability[1]))
+    try:
+        # your prediction code
 
-            chart_data = pd.DataFrame({
-                "Gender": ["Male", "Female"],
-                "Probability": [male_prob, female_prob]
-            })
+        confidence = max(male_prob, female_prob)
 
-            st.bar_chart(
-                chart_data.set_index("Gender")
-            )
+        st.metric(
+            label="Confidence Score",
+            value=f"{confidence:.2f}%"
+        )
 
-except Exception as e:
-    st.error(f"❌ Prediction Error: {e}")
-```
+        st.markdown("### 📊 Probability Analysis")
+
+        st.write(f"👨 Male Probability: **{male_prob:.2f}%**")
+        st.progress(float(probability[0]))
+
+        st.write(f"👩 Female Probability: **{female_prob:.2f}%**")
+        st.progress(float(probability[1]))
+
+        chart_data = pd.DataFrame({
+            "Gender": ["Male", "Female"],
+            "Probability": [male_prob, female_prob]
+        })
+
+        st.bar_chart(chart_data.set_index("Gender"))
+
+    except Exception as e:
+        st.error(f"❌ Prediction Error: {e}")
 
 # ==========================================
-
 # FEATURES
-
 # ==========================================
-
 st.markdown("---")
 
 st.markdown("""
