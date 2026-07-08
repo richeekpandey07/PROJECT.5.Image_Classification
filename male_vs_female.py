@@ -188,8 +188,6 @@ if uploaded_file is not None:
             male_prob = probability[0] * 100
             female_prob = probability[1] * 100
 
-
-```python
 if uploaded_file is not None:
 
     try:
