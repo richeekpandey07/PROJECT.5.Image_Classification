@@ -68,7 +68,7 @@ st.markdown("""
 
 @st.cache_resource
 def load_model():
-    return joblib.load("male_female_model.pkl")
+    return joblib.load("male_female_model .pkl")
 
 try:
     model = load_model()
