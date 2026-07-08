@@ -1,136 +1,294 @@
 import streamlit as st
 import numpy as np
+import pandas as pd
 from PIL import Image
 import joblib
 
-# ----------------------------------
-# Page Configuration
-# ----------------------------------
+# ==========================================
+
+# PAGE CONFIGURATION
+
+# ==========================================
+
 st.set_page_config(
-    page_title="Male vs Female Classifier",
-    page_icon="👨👩",
-    layout="centered"
+page_title="AI Gender Classification System",
+page_icon="🧠",
+layout="wide"
 )
 
-# ----------------------------------
-# Load Model
-# ----------------------------------
+# ==========================================
+
+# CUSTOM CSS
+
+# ==========================================
+
+st.markdown("""
+
+<style>
+
+.main {
+    background-color: #f8fafc;
+}
+
+.big-title {
+    text-align:center;
+    font-size:48px;
+    font-weight:bold;
+    color:#4F46E5;
+}
+
+.sub-title {
+    text-align:center;
+    font-size:20px;
+    color:#64748b;
+}
+
+.prediction-box {
+    padding:20px;
+    border-radius:15px;
+    background:#eef2ff;
+    box-shadow:0px 4px 15px rgba(0,0,0,0.1);
+}
+
+.footer {
+    text-align:center;
+    padding:20px;
+    margin-top:30px;
+}
+
+</style>
+
+""", unsafe_allow_html=True)
+
+# ==========================================
+
+# LOAD MODEL
+
+# ==========================================
+
 @st.cache_resource
 def load_model():
-    return joblib.load("male_female_model .pkl")
+return joblib.load("male_female_model.pkl")
 
 try:
-    model = load_model()
+model = load_model()
 except Exception as e:
-    st.error(f"Error loading model: {e}")
-    st.stop()
+st.error(f"❌ Error Loading Model: {e}")
+st.stop()
 
 IMG_SIZE = 64
 
-# ----------------------------------
-# Header
-# ----------------------------------
+# ==========================================
+
+# SIDEBAR
+
+# ==========================================
+
+st.sidebar.title("📌 Project Information")
+
+st.sidebar.info("""
+
+### AI Gender Classification
+
+This application uses Machine Learning to predict whether an uploaded image belongs to:
+
+👨 Male
+
+👩 Female
+
+Built using:
+
+* Python
+* Scikit-Learn
+* Streamlit
+* NumPy
+  """)
+
+st.sidebar.success("Model: Logistic Regression")
+
+# ==========================================
+
+# HEADER
+
+# ==========================================
+
 st.markdown("""
-<h1 style='text-align:center;color:#4F46E5;'>
-👨 Male vs Female Image Classifier 👩
-</h1>
+
+<div class="big-title">
+🧠 AI-Powered Gender Classification System
+</div>
+
+<div class="sub-title">
+Upload a face image and let Machine Learning predict the gender with confidence scores.
+</div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-### Upload an image and let the model predict whether the face belongs to a Male or Female.
-""")
+st.markdown("---")
 
-st.divider()
+# ==========================================
 
-# ----------------------------------
-# File Upload
-# ----------------------------------
+# FILE UPLOAD
+
+# ==========================================
+
 uploaded_file = st.file_uploader(
-    "📤 Upload Image",
-    type=["jpg", "jpeg", "png"]
+"📤 Upload an Image",
+type=["jpg", "jpeg", "png"]
 )
 
-# ----------------------------------
-# Prediction Section
-# ----------------------------------
+# ==========================================
+
+# PREDICTION
+
+# ==========================================
+
 if uploaded_file is not None:
 
-    try:
-        image = Image.open(uploaded_file).convert("RGB")
+```
+try:
+    image = Image.open(uploaded_file).convert("RGB")
 
-        col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 1])
 
-        with col1:
-            st.image(
-                image,
-                caption="Uploaded Image",
-                use_container_width=True
+    with col1:
+
+        st.subheader("📷 Uploaded Image")
+
+        st.image(
+            image,
+            use_container_width=True
+        )
+
+    # PREPROCESSING
+
+    resized = image.resize((IMG_SIZE, IMG_SIZE))
+    resized = np.array(resized)
+
+    resized = resized / 255.0
+
+    resized = resized.flatten()
+
+    # PREDICTION
+
+    prediction = model.predict([resized])[0]
+
+    probability = None
+
+    if hasattr(model, "predict_proba"):
+        probability = model.predict_proba([resized])[0]
+
+    with col2:
+
+        st.subheader("🎯 Prediction Result")
+
+        if prediction == 0:
+            st.success("👨 MALE")
+        else:
+            st.success("👩 FEMALE")
+
+        if probability is not None:
+
+            male_prob = probability[0] * 100
+            female_prob = probability[1] * 100
+
+            confidence = max(male_prob, female_prob)
+
+            st.metric(
+                label="Confidence Score",
+                value=f"{confidence:.2f}%"
             )
 
-        # Preprocessing
-        resized = image.resize((IMG_SIZE, IMG_SIZE))
-        resized = np.array(resized)
+            st.markdown("### 📊 Probability Analysis")
 
-      
-        resized = resized / 255.0
+            st.write(
+                f"👨 Male Probability: **{male_prob:.2f}%**"
+            )
+            st.progress(float(probability[0]))
 
-        resized = resized.flatten()
+            st.write(
+                f"👩 Female Probability: **{female_prob:.2f}%**"
+            )
+            st.progress(float(probability[1]))
 
-        # Prediction
-        prediction = model.predict([resized])[0]
+            chart_data = pd.DataFrame({
+                "Gender": ["Male", "Female"],
+                "Probability": [male_prob, female_prob]
+            })
 
-        # Probability
-        probability = None
-        if hasattr(model, "predict_proba"):
-            probability = model.predict_proba([resized])[0]
+            st.bar_chart(
+                chart_data.set_index("Gender")
+            )
 
-        with col2:
+except Exception as e:
+    st.error(f"❌ Prediction Error: {e}")
+```
 
-            st.subheader("Prediction Result")
+# ==========================================
 
-            if prediction == 0:
-                st.success("👨 Male")
-            else:
-                st.success("👩 Female")
+# FEATURES
 
-            if probability is not None:
+# ==========================================
 
-                st.subheader("Confidence Score")
+st.markdown("---")
 
-                st.write(
-                    f"👨 Male Probability: **{probability[0] * 100:.2f}%**"
-                )
-                st.progress(float(probability[0]))
+st.markdown("""
 
-                st.write(
-                    f"👩 Female Probability: **{probability[1] * 100:.2f}%**"
-                )
-                st.progress(float(probability[1]))
+## ✨ Features
 
-    except Exception as e:
-        st.error(f"Prediction Error: {e}")
+✅ Real-Time Gender Prediction
 
-# ----------------------------------
-# Footer
-# ----------------------------------
+✅ Machine Learning Based Classification
+
+✅ Confidence Score Visualization
+
+✅ Interactive User Interface
+
+✅ Streamlit Deployment Ready
+
+✅ GitHub Portfolio Project
+""")
+
+# ==========================================
+
+# DEVELOPER SECTION
+
+# ==========================================
+
+st.markdown("---")
+
+st.markdown("""
+
+## 👨‍💻 Developer
+
+### Richeek Pandey
+
+🎓 Artificial Intelligence & Machine Learning Enthusiast
+
+🔗 LinkedIn:
+https://www.linkedin.com/in/richeek-pandey-9954783a9
+
+🔗 GitHub:
+https://github.com/richeekpandey07
+""")
+
+# ==========================================
+
+# FOOTER
+
+# ==========================================
+
+st.markdown("---")
 
 st.markdown(
-    """
-    <div style='text-align:center'>
-        <h3>🚀 About the Developer</h3>
-        <p><b>Richeek Pandey</b></p>
-        <p>
-            <a href="https://www.linkedin.com/in/richeek-pandey-9954783a9">
-                LinkedIn Profile
-            </a>
-            |
-            <a href="https://github.com/richeekpandey07" >
-                GitHub Profile
-            </a>
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True
+"""
+
+<div class="footer">
+
+⭐ Thank you for using the AI Gender Classification System ⭐
+
+Made with ❤️ using Streamlit & Scikit-Learn
+
+</div>
+""",
+unsafe_allow_html=True
 )
-
-
