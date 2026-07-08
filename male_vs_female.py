@@ -52,9 +52,36 @@ st.divider()
 # Upload Image
 # ----------------------------------
 uploaded_file = st.file_uploader(
-    "📤 Upload Image",
+    "Upload an image",
     type=["jpg", "jpeg", "png"]
 )
+
+if uploaded_file is not None:
+
+    image = Image.open(uploaded_file).convert("L")
+
+    # Resize image
+    resized = image.resize((64, 64))
+
+    # Convert to numpy array
+    resized = np.array(resized)
+
+    # Flatten for model input
+    resized = resized.flatten()
+
+    # Prediction
+    prediction = model.predict([resized])[0]
+
+    # Probability
+    probability = model.predict_proba([resized])[0]
+
+    if prediction == 0:
+        st.success("👨 Male")
+    else:
+        st.success("👩 Female")
+
+    st.write(f"👨 Male Probability: {probability[0]*100:.2f}%")
+    st.write(f"👩 Female Probability: {probability[1]*100:.2f}%")
 
 # ----------------------------------
 # Prediction
