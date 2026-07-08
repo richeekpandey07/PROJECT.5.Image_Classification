@@ -137,27 +137,33 @@ type=["jpg", "jpeg", "png"]
 
 # ==========================================
 
-# PREDICTION
 
+and throws an error.
+
+Replace that entire section with:
+
+```python
+# ==========================================
+# PREDICTION
 # ==========================================
 
 if uploaded_file is not None:
 
-```
-try:
-    image = Image.open(uploaded_file).convert("RGB")
+    try:
+        image = Image.open(uploaded_file).convert("RGB")
 
-    col1, col2 = st.columns([1, 1])
+        col1, col2 = st.columns([1, 1])
 
-    with col1:
+        with col1:
+            st.subheader("📷 Uploaded Image")
 
-        st.subheader("📷 Uploaded Image")
+            st.image(
+                image,
+                use_container_width=True
+            )
 
-        st.image(
-            image,
-            use_container_width=True
-        )
-
+    except Exception as e:
+        st.error(f"❌ Prediction Error: {e}")
     # PREPROCESSING
 
     resized = image.resize((IMG_SIZE, IMG_SIZE))
