@@ -71,8 +71,7 @@ if uploaded_file is not None:
         resized = image.resize((IMG_SIZE, IMG_SIZE))
         resized = np.array(resized)
 
-        # Agar training me normalization use nahi ki thi
-        # to niche wali line comment kar dena
+      
         resized = resized / 255.0
 
         resized = resized.flatten()
