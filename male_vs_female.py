@@ -59,6 +59,16 @@ uploaded_file = st.file_uploader(
 # ----------------------------------
 # Prediction
 # ----------------------------------
+prediction = model.predict([resized])[0]
+probability = model.predict_proba([resized])[0]
+
+if prediction == 0:
+    st.success("👨 Male")
+else:
+    st.success("👩 Female")
+
+st.write(f"👨 Male Probability: {probability[0] * 100:.2f}%")
+st.write(f"👩 Female Probability: {probability[1] * 100:.2f}%")
 if uploaded_file is not None:
 
     image = Image.open(uploaded_file).convert("RGB")
@@ -133,4 +143,4 @@ st.markdown(
 # Original file is located at
 #     https:/colab.research.google.com/drive/14_zqkBb_RB7UKtgHV2zMWvNmXV2_OiSg
 # """
-st.write(f" Female Probability: **{probability[1] * 100:.2f}%**")
+
