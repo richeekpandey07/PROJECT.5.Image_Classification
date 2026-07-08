@@ -188,11 +188,6 @@ if uploaded_file is not None:
             male_prob = probability[0] * 100
             female_prob = probability[1] * 100
 
-is invalid Python and breaks the `try/except` structure.
-
-Also, your `except` is probably at the wrong indentation level.
-
-It should look like this:
 
 ```python
 if uploaded_file is not None:
