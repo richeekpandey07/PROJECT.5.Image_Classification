@@ -62,24 +62,23 @@ st.markdown("""
 
 # ==========================================
 
+# ==========================================
 # LOAD MODEL
-
 # ==========================================
 
 @st.cache_resource
 def load_model():
-return joblib.load("male_female_model.pkl")
+    return joblib.load("male_female_model.pkl")
 
 try:
-model = load_model()
+    model = load_model()
 except Exception as e:
-st.error(f"❌ Error Loading Model: {e}")
-st.stop()
+    st.error(f"❌ Error Loading Model: {e}")
+    st.stop()
 
 IMG_SIZE = 64
 
 # ==========================================
-
 # SIDEBAR
 
 # ==========================================
