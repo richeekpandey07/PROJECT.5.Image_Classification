@@ -133,6 +133,4 @@ st.markdown(
 # Original file is located at
 #     https:/colab.research.google.com/drive/14_zqkBb_RB7UKtgHV2zMWvNmXV2_OiSg
 # """
-
-
-    st.write(f" Female Probability: **{probability[1] * 100:.2f}%**")
+st.write(f" Female Probability: **{probability[1] * 100:.2f}%**")
