@@ -135,10 +135,3 @@ st.markdown(
 )
 
 
-# # st.markdown("""
-# # ### 🚀 About Project
-
-# # This Machine Learning application predicts whether an uploaded face image belongs to a Male or Female.
-
-
-# """)
