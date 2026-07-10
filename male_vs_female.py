@@ -233,11 +233,6 @@ st.markdown("""
 
 ✅ Confidence Score Visualization
 
-✅ Interactive User Interface
-
-✅ Streamlit Deployment Ready
-
-✅ GitHub Portfolio Project
 """)
 
 # ==========================================
